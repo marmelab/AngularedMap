@@ -8,3 +8,5 @@ You'll need to install asset dependencies with bower :
 ```
 bower install
 ```
+
+![Angulared Map](screenshot.png "Angulared Map")
