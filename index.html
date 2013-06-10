@@ -1,0 +1,81 @@
+<!doctype html>
+<html ng-app="myApp">
+    <head>
+        <meta charset="utf-8">
+        <title>My Title</title>
+        <link rel="stylesheet" href="components/bootstrap/docs/assets/css/bootstrap.css">
+        <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
+        <script src="components/jquery/jquery.js"></script>
+        <script src="components/angular/angular.js"></script>
+        <script src="components/angular-ui/build/angular-ui.js"></script>
+        <script src="app.js"></script>
+        <style>
+        #map_canvas {
+            height: 900px;
+            width: 100%;
+        }
+        html, body, .container-fluid, .row-fluid, .span8, #map_canvas {
+            height: 100%;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row-fluid" ng-controller="MyCtrl">
+                <div class="span4">
+
+                    <div class="page-header">
+                        <h2><ng-pluralize count="points.length" when="{ '0': '0 point', 'one': '1 point', 'other': '{} points' }"></ng-pluralize></h2>
+                    </div>
+
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>lat.</th>
+                                <th>lng.</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="point in points" ng-mouseenter="pointHighlight(point, true)" ng-mouseleave="pointHighlight(point, false)">
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ point.marker.getPosition().lat()|number:4 }}</td>
+                                <td>{{ point.marker.getPosition().lng()|number:4 }}</td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a class="btn btn-small" href="#" ng-click="centerPoint($index)"><i class="icon-search"></i></a>
+                                        <a class="btn btn-small" href="#" ng-click="removePoint($index)"><i class="icon-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <form class="form-horizontal" ng-submit="addPoint()">
+                        <div class="control-group">
+                            <label class="control-label" for="lat">Latitude</label>
+                            <div class="controls">
+                                <input class="input-small" id="lat" ng-model="lat" required type="text" smart-float>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="lng">Longitude</label>
+                            <div class="controls">
+                                <input class="input-small" id="lng" ng-model="lng" required type="text" smart-float>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn btn-primary" type="submit">Add</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="span8">
+                    <div id="map_canvas" ui-map="myMap" ui-options="mapOptions" ui-event="{ 'map-idle': 'onMapIdle()' }"></div>
+                    <div ng-repeat="point in points" ui-map-marker="point.marker"></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
